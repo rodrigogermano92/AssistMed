@@ -96,6 +96,14 @@ export default function Home() {
     window.location.href = `https://wa.me/55000000000?text=${encodeURIComponent(text)}`;
   };
 
+  const handleScrollTo = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault();
+    const element = document.getElementById(targetId);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div ref={containerRef}>
       {/* Lead Modal */}
@@ -161,9 +169,9 @@ export default function Home() {
             </span>
           </div>
           <div className="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600 dark:text-slate-400">
-            <a className="hover:text-brand-blue transition-colors" href="#beneficios">Funcionalidades</a>
-            <a className="hover:text-brand-blue transition-colors" href="#produto">Sobre</a>
-            <a className="hover:text-brand-blue transition-colors" href="#planos">Planos</a>
+            <a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'beneficios')}>Funcionalidades</a>
+            <a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'produto')}>Sobre</a>
+            <a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'planos')}>Planos</a>
           </div>
           <div className="flex items-center gap-4">
             <button
@@ -600,9 +608,9 @@ export default function Home() {
             <div className="space-y-6">
               <h4 className="font-bold text-brand-dark dark:text-white text-[11px] uppercase tracking-widest">Navegação</h4>
               <ul className="space-y-4 text-slate-600 dark:text-slate-400 text-sm font-medium">
-                <li><a className="hover:text-brand-blue transition-colors" href="#beneficios">Funcionalidades</a></li>
-                <li><a className="hover:text-brand-blue transition-colors" href="#produto">Sobre</a></li>
-                <li><a className="hover:text-brand-blue transition-colors" href="#depoimentos">Depoimentos</a></li>
+                <li><a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'beneficios')}>Funcionalidades</a></li>
+                <li><a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'produto')}>Sobre</a></li>
+                <li><a className="hover:text-brand-blue transition-colors cursor-pointer" onClick={(e) => handleScrollTo(e, 'depoimentos')}>Depoimentos</a></li>
               </ul>
             </div>
             <div className="space-y-6">
