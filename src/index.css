@@ -1,0 +1,152 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", sans-serif;
+  --font-heading: "Outfit", sans-serif;
+  --color-brand-blue: #5D89E1;
+  --color-brand-dark: #0F172A;
+  --color-brand-bg: #F8FAFC;
+  --color-brand-teal: #58A6A6;
+  --color-light-gray: #F1F5F9;
+  --color-dark-card: #1E293B;
+  --radius-3xl: 24px;
+  --radius-4xl: 32px;
+  --radius-5xl: 48px;
+}
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --glass-bg: rgba(255, 255, 255, 0.75);
+  --frosted-gradient: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.85) 100%);
+  --gel-gradient: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+}
+.dark {
+  --glass-bg: rgba(15, 23, 42, 0.75);
+  --frosted-gradient: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.85) 100%);
+}
+body {
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-dark);
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  overflow-x: hidden;
+  min-height: max(884px, 100dvh);
+}
+.dark body {
+  background-color: var(--color-brand-dark);
+  color: var(--color-light-gray);
+}
+h1, h2, h3, h4 {
+  font-family: 'Outfit', sans-serif;
+  letter-spacing: -0.02em;
+}
+.frosted-card {
+  background: var(--frosted-gradient);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.08);
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+}
+.dark .frosted-card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.wa-chat-bubble {
+  padding: 10px 14px;
+  margin-bottom: 8px;
+  max-width: 82%;
+  font-size: 0.825rem;
+  line-height: 1.4;
+  position: relative;
+  box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+}
+.wa-msg-in {
+  background: #FFFFFF;
+  color: #111B21;
+  align-self: flex-start;
+  border-radius: 0px 8px 8px 8px;
+  border: 1px solid #e2e8f0;
+}
+.dark .wa-msg-in { 
+  background: #202C33; 
+  color: #E9EDEF;
+  border-color: #2a3942;
+}
+.wa-msg-out {
+  background: var(--color-brand-blue);
+  color: white;
+  align-self: flex-end;
+  border-radius: 8px 0px 8px 8px;
+}
+.gel-button {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px -4px rgba(93, 137, 225, 0.5);
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+}
+.gel-button::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 45%;
+  background: var(--gel-gradient);
+  pointer-events: none;
+}
+.gel-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px -4px rgba(93, 137, 225, 0.6);
+}
+.metallic-device {
+  background: linear-gradient(145deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: 
+    inset 0 0 1px 1px rgba(255,255,255,0.9),
+    0 25px 50px -12px rgba(0,0,0,0.25);
+}
+.dark .metallic-device {
+  background: linear-gradient(145deg, #475569 0%, #1e293b 50%, #020617 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+.section-spacing {
+  padding-top: 100px;
+  padding-bottom: 100px;
+}
+.bg-blob {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(93, 137, 225, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+    border-radius: 50%;
+    z-index: -1;
+    filter: blur(50px);
+}
+.typing-dot {
+  width: 4px;
+  height: 4px;
+  background: #94a3b8;
+  border-radius: 50%;
+  display: inline-block;
+  margin: 0 1px;
+}
+.carousel-track {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-item {
+    flex: 0 0 85%;
+    scroll-snap-align: center;
+    margin-right: 20px;
+}
+@media (min-width: 768px) {
+    .carousel-item { flex: 0 0 450px; }
+}
+.testimonial-quotes {
+  font-family: 'Outfit', sans-serif;
+  font-size: 140px;
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+}
