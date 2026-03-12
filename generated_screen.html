@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssistMed - A IA Clínica no seu WhatsApp</title>
+<meta content="Inteligência Artificial Médica Avançada disponível 24h no seu WhatsApp. Decisões mais rápidas e pacientes mais seguros." name="description"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<!-- Icons (FontAwesome) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+          },
+          colors: {
+            'med-dark': '#050a14',
+            'med-deep': '#0a1224',
+            'med-cyan': '#00f2ff',
+            'med-emerald': '#10b981',
+            'med-glass': 'rgba(255, 255, 255, 0.03)',
+            'med-border': 'rgba(255, 255, 255, 0.1)',
+          },
+          animation: {
+            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+            'float': 'float 6s ease-in-out infinite',
+            'glow': 'glow 3s ease-in-out infinite alternate',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-20px)' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 5px rgba(0, 242, 255, 0.2)' },
+              '100%': { boxShadow: '0 0 20px rgba(0, 242, 255, 0.6)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+<style data-purpose="custom-globals">
+    body {
+      background-color: #050a14;
+      color: #e2e8f0;
+      overflow-x: hidden;
+    }
+    .glass-effect {
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .text-gradient-cyan {
+      background: linear-gradient(90deg, #00f2ff, #10b981);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .bg-mesh {
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 242, 255, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(0, 242, 255, 0.1) 0px, transparent 50%);
+    }
+    .wa-chat-bubble {
+      border-radius: 18px;
+      padding: 10px 14px;
+      margin-bottom: 8px;
+      max-width: 85%;
+      font-size: 0.9rem;
+    }
+    .wa-msg-in {
+      background: #202c33;
+      color: #e9edef;
+      align-self: flex-start;
+      border-top-left-radius: 2px;
+    }
+    .wa-msg-out {
+      background: #005c4b;
+      color: #e9edef;
+      align-self: flex-end;
+      border-top-right-radius: 2px;
+    }
+  </style>
+</head>
+<body class="bg-mesh">
+<!-- BEGIN: Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-4 py-4" data-purpose="main-nav">
+<div class="max-w-7xl mx-auto flex items-center justify-between glass-effect rounded-2xl px-6 py-3">
+<div class="flex items-center gap-2">
+<i class="fa-solid fa-heart-pulse text-med-cyan text-2xl animate-pulse"></i>
+<span class="text-xl font-black tracking-tighter">Assist<span class="text-med-cyan">Med</span></span>
+</div>
+<!-- Desktop Menu -->
+<div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+<a class="hover:text-med-cyan transition-colors" href="#beneficios">Benefícios</a>
+<a class="hover:text-med-cyan transition-colors" href="#produto">O Produto</a>
+<a class="hover:text-med-cyan transition-colors" href="#planos">Planos</a>
+<a class="hover:text-med-cyan transition-colors" href="#depoimentos">Depoimentos</a>
+</div>
+<div class="flex items-center gap-4">
+<a class="hidden sm:block px-5 py-2 rounded-full bg-med-cyan text-med-dark font-bold text-sm hover:scale-105 transition-transform" href="#cta">
+          Testar Grátis
+        </a>
+<button class="md:hidden text-white text-2xl" id="mobile-menu-btn">
+<i class="fa-solid fa-bars-staggered"></i>
+</button>
+</div>
+</div>
+</nav>
+<!-- END: Navigation -->
+<!-- BEGIN: Hero Section -->
+<header class="relative pt-32 pb-20 px-6 overflow-hidden" data-purpose="hero">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+<div class="z-10 text-center lg:text-left">
+<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-med-cyan/10 border border-med-cyan/20 text-med-cyan text-xs font-bold uppercase tracking-wider mb-6">
+<span class="w-2 h-2 rounded-full bg-med-cyan animate-ping"></span>
+          Inteligência Artificial Médica Avançada
+        </div>
+<h1 class="text-4xl md:text-6xl lg:text-7xl font-black leading-tight mb-6">
+          A IA Clínica no seu <span class="text-gradient-cyan">WhatsApp.</span>
+</h1>
+<p class="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto lg:mx-0">
+          AssistMed é a inteligência artificial treinada para médicos — disponível 24h. Decisões mais rápidas, protocolos atualizados e pacientes mais seguros.
+        </p>
+<div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4">
+<a class="w-full sm:w-auto flex items-center justify-center gap-3 px-8 py-4 bg-med-emerald rounded-xl text-white font-bold text-lg hover:brightness-110 shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-all" href="https://wa.me/">
+<i class="fa-brands fa-whatsapp text-2xl"></i>
+            Quero Testar Grátis
+          </a>
+<div class="flex items-center gap-2 text-sm text-slate-500 font-medium">
+<i class="fa-solid fa-shield-check text-med-emerald"></i>
+            Conformidade CFM e LGPD
+          </div>
+</div>
+</div>
+<div class="relative flex justify-center lg:justify-end" data-purpose="hero-mockup">
+<!-- Floating Elements -->
+<div class="absolute -top-10 -left-10 w-32 h-32 bg-med-cyan/20 blur-3xl animate-pulse"></div>
+<div class="absolute -bottom-10 -right-10 w-40 h-40 bg-med-emerald/20 blur-3xl animate-pulse"></div>
+<!-- Phone Mockup -->
+<div class="relative w-full max-w-[300px] aspect-[9/18.5] bg-neutral-900 rounded-[3rem] border-8 border-neutral-800 shadow-2xl overflow-hidden animate-float">
+<div class="absolute top-0 left-1/2 -translate-x-1/2 w-1/3 h-6 bg-neutral-800 rounded-b-2xl z-20"></div>
+<!-- WhatsApp Interface Simulation -->
+<div class="h-full flex flex-col bg-[#0b141a]">
+<div class="bg-[#202c33] p-4 pt-10 flex items-center gap-3">
+<i class="fa-solid fa-arrow-left text-slate-300"></i>
+<div class="w-8 h-8 rounded-full bg-med-cyan flex items-center justify-center text-med-dark font-bold text-xs">AM</div>
+<div>
+<div class="text-xs font-bold text-white">AssistMed IA</div>
+<div class="text-[10px] text-med-emerald">Online</div>
+</div>
+</div>
+<div class="flex-1 p-3 flex flex-col gap-2 overflow-y-auto">
+<div class="wa-chat-bubble wa-msg-out">Qual o protocolo para sepse em paciente de 65a com DRC?</div>
+<div class="wa-chat-bubble wa-msg-in">
+<p class="font-bold text-med-cyan mb-1">Protocolo Sepse (Diretriz 2024):</p>
+<p class="text-[11px] leading-relaxed">
+                  1. Ringer Lactato: cautela no volume (15-20ml/kg) devido à DRC.<br/>
+                  2. ATB (Ceftriaxona + Vancomicina) na 1ª hora.<br/>
+                  3. Monitorar lactato e débito urinário.
+                </p>
+</div>
+<div class="wa-chat-bubble wa-msg-out">Dose de Noradrenalina?</div>
+<div class="wa-chat-bubble wa-msg-in">
+<p class="text-[11px]">Início: 0.05 a 0.5 mcg/kg/min. Titular para PAM &gt; 65 mmHg.</p>
+</div>
+</div>
+<div class="bg-[#202c33] p-3 flex items-center gap-2">
+<div class="flex-1 bg-[#2a3942] rounded-full px-4 py-2 text-[10px] text-slate-400">Mensagem...</div>
+<i class="fa-solid fa-microphone text-slate-400"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<!-- END: Hero Section -->
+<!-- BEGIN: Trust Bar -->
+<section class="py-12 border-y border-med-border bg-med-dark/50" data-purpose="trust-bar">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-wrap justify-center md:justify-between items-center gap-8 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+<div class="flex items-center gap-3 font-bold text-slate-400">
+<i class="fa-solid fa-shield-halved text-2xl text-med-emerald"></i>
+<span>CONFORME CFM &amp; LGPD</span>
+</div>
+<div class="flex items-center gap-3 font-bold text-slate-400">
+<i class="fa-solid fa-user-doctor text-2xl text-med-cyan"></i>
+<span>2.400+ MÉDICOS</span>
+</div>
+<div class="flex items-center gap-3 font-bold text-slate-400">
+<i class="fa-solid fa-server text-2xl text-med-emerald"></i>
+<span>PADRÃO HL7 / FHIR</span>
+</div>
+<div class="flex items-center gap-3 font-bold text-slate-400">
+<i class="fa-solid fa-lock text-2xl text-med-cyan"></i>
+<span>AES-256 ENCRYPTED</span>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Trust Bar -->
+<!-- BEGIN: Benefits Grid -->
+<section class="py-24 px-6 relative" data-purpose="features" id="beneficios">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-5xl font-black mb-4">O raciocínio clínico do futuro, <span class="text-gradient-cyan">hoje.</span></h2>
+<p class="text-slate-400 max-w-2xl mx-auto">Tecnologia de ponta desenhada para otimizar cada segundo da sua jornada médica.</p>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<!-- Benefit 1 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-cyan">
+<div class="w-14 h-14 rounded-2xl bg-med-cyan/10 flex items-center justify-center text-med-cyan text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-brain"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Raciocínio Instantâneo</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Apoio em diagnósticos diferenciais em segundos, cruzando sintomas com as maiores bases literárias globais.</p>
+</div>
+<!-- Benefit 2 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-emerald">
+<div class="w-14 h-14 rounded-2xl bg-med-emerald/10 flex items-center justify-center text-med-emerald text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-prescription-bottle-medical"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Protocolos Dinâmicos</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Sugestões posológicas e condutas rigorosas baseadas em diretrizes internacionais atualizadas em tempo real.</p>
+</div>
+<!-- Benefit 3 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-cyan">
+<div class="w-14 h-14 rounded-2xl bg-med-cyan/10 flex items-center justify-center text-med-cyan text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-file-medical"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Resumo de Casos</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Envie um áudio descrevendo o quadro do paciente e receba uma evolução estruturada, pronta para o prontuário.</p>
+</div>
+<!-- Benefit 4 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-emerald">
+<div class="w-14 h-14 rounded-2xl bg-med-emerald/10 flex items-center justify-center text-med-emerald text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-brands fa-whatsapp"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Zero Curva de Aprendizado</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Sem aplicativos pesados ou senhas novas. A AssistMed vive onde você já está: no seu WhatsApp.</p>
+</div>
+<!-- Benefit 5 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-cyan">
+<div class="w-14 h-14 rounded-2xl bg-med-cyan/10 flex items-center justify-center text-med-cyan text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-microscope"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Análise de Exames</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Faça upload de PDFs de exames e receba uma análise crítica das alterações, poupando minutos preciosos.</p>
+</div>
+<!-- Benefit 6 -->
+<div class="group p-8 rounded-3xl glass-effect hover:bg-white/5 transition-all border-l-4 border-l-med-emerald">
+<div class="w-14 h-14 rounded-2xl bg-med-emerald/10 flex items-center justify-center text-med-emerald text-2xl mb-6 group-hover:scale-110 transition-transform">
+<i class="fa-solid fa-user-lock"></i>
+</div>
+<h3 class="text-xl font-bold mb-3">Ética e Segurança</h3>
+<p class="text-slate-400 text-sm leading-relaxed">Criptografia de ponta a ponta e anonimização de dados sensíveis para total conformidade jurídica.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Benefits Grid -->
+<!-- BEGIN: Product Showcase -->
+<section class="py-24 px-6 bg-med-deep/40" data-purpose="product-visual" id="produto">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+<div class="order-2 lg:order-1 relative">
+<div class="glass-effect p-4 rounded-[2.5rem] shadow-2xl relative z-10">
+<div class="bg-med-dark rounded-[2rem] p-6 aspect-video flex flex-col items-center justify-center border border-med-border overflow-hidden">
+<!-- Mockup Screen -->
+<div class="w-full flex items-center gap-2 mb-4 border-b border-med-border pb-3">
+<div class="w-3 h-3 rounded-full bg-red-500"></div>
+<div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+<div class="w-3 h-3 rounded-full bg-green-500"></div>
+<div class="ml-4 text-[10px] text-slate-500 font-mono">web.whatsapp.com/assistmed-ai</div>
+</div>
+<div class="flex-1 flex flex-col justify-center gap-3 w-full max-w-md">
+<div class="wa-chat-bubble wa-msg-out text-xs">Calcule o escore de Wells para TEP.</div>
+<div class="wa-chat-bubble wa-msg-in text-xs">
+<span class="font-bold text-med-emerald">Escore de Wells p/ TEP:</span><br/>
+                  • Sinais clínicos de TVP (+3)<br/>
+                  • Sem diagnóstico alternativo (+3)<br/>
+                  • FC &gt; 100 bpm (+1.5)<br/>
+<span class="block mt-2 font-bold underline">Probabilidade ALTA se &gt; 6.</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Decorative back glow -->
+<div class="absolute inset-0 bg-med-cyan/10 blur-[100px] -z-10"></div>
+</div>
+<div class="order-1 lg:order-2">
+<h2 class="text-3xl md:text-4xl font-black mb-6 leading-tight">Uma pergunta no WhatsApp.<br/><span class="text-med-emerald">Uma resposta clínica precisa.</span></h2>
+<p class="text-slate-400 mb-8 leading-relaxed">
+          Esqueça procurar em livros volumosos ou perder tempo em sites de busca genéricos durante um plantão corrido. O AssistMed foi treinado especificamente com literatura médica premium (UpToDate, Medscape, DynaMed) para entregar precisão.
+        </p>
+<ul class="space-y-4">
+<li class="flex items-center gap-3 text-slate-200">
+<div class="w-6 h-6 rounded-full bg-med-cyan/20 flex items-center justify-center text-med-cyan text-xs">
+<i class="fa-solid fa-check"></i>
+</div>
+            Treinada com literatura médica premium 2024.
+          </li>
+<li class="flex items-center gap-3 text-slate-200">
+<div class="w-6 h-6 rounded-full bg-med-cyan/20 flex items-center justify-center text-med-cyan text-xs">
+<i class="fa-solid fa-check"></i>
+</div>
+            Reconhecimento avançado de terminologia técnica em áudios.
+          </li>
+<li class="flex items-center gap-3 text-slate-200">
+<div class="w-6 h-6 rounded-full bg-med-cyan/20 flex items-center justify-center text-med-cyan text-xs">
+<i class="fa-solid fa-check"></i>
+</div>
+            Cálculos médicos integrados (Escores, Gotejamento, Filtração).
+          </li>
+</ul>
+</div>
+</div>
+</section>
+<!-- END: Product Showcase -->
+<!-- BEGIN: Pricing -->
+<section class="py-24 px-6" data-purpose="pricing" id="planos">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-16">
+<h2 class="text-3xl md:text-5xl font-black mb-4">Planos feitos para profissionais</h2>
+<p class="text-slate-400">Escolha a inteligência certa para a sua fase de carreira.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-8">
+<!-- Plan 1 -->
+<div class="p-8 rounded-[2.5rem] glass-effect border border-med-border flex flex-col hover:translate-y-[-10px] transition-all duration-300">
+<h3 class="text-xl font-bold mb-1">Residente</h3>
+<p class="text-slate-500 text-sm mb-6">Para médicos em formação</p>
+<div class="text-4xl font-black mb-6">R$ 79<span class="text-sm font-normal text-slate-500">/mês</span></div>
+<ul class="space-y-4 mb-10 flex-1">
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Dúvidas clínicas ilimitadas</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Protocolos de residência</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Suporte via IA 24/7</li>
+</ul>
+<a class="w-full py-3 rounded-xl border border-med-cyan text-med-cyan font-bold text-center hover:bg-med-cyan hover:text-med-dark transition-all" href="#">Assinar Residente</a>
+</div>
+<!-- Plan 2 (Popular) -->
+<div class="p-8 rounded-[2.5rem] glass-effect border-2 border-med-cyan relative flex flex-col shadow-[0_0_40px_rgba(0,242,255,0.15)] scale-105 z-10">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-med-cyan text-med-dark text-[10px] font-black uppercase px-4 py-1 rounded-full">Mais Popular</div>
+<h3 class="text-xl font-bold mb-1">Clínico Pro</h3>
+<p class="text-slate-500 text-sm mb-6">Médicos em consultório</p>
+<div class="text-4xl font-black mb-6 text-med-cyan">R$ 149<span class="text-sm font-normal text-slate-500">/mês</span></div>
+<ul class="space-y-4 mb-10 flex-1">
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Tudo do plano Residente</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Análise de PDF de exames</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Resumo de áudios médicos</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-cyan"></i> Acesso Web Dashboard</li>
+</ul>
+<a class="w-full py-3 rounded-xl bg-med-cyan text-med-dark font-bold text-center shadow-[0_0_20px_rgba(0,242,255,0.4)] hover:brightness-110 transition-all" href="#">Começar Clínico Pro</a>
+</div>
+<!-- Plan 3 -->
+<div class="p-8 rounded-[2.5rem] glass-effect border border-med-border flex flex-col hover:translate-y-[-10px] transition-all duration-300">
+<h3 class="text-xl font-bold mb-1">Institucional</h3>
+<p class="text-slate-500 text-sm mb-6">Hospitais e redes de saúde</p>
+<div class="text-3xl font-black mb-6">Sob Consulta</div>
+<ul class="space-y-4 mb-10 flex-1">
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-emerald"></i> Escala corporativa</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-emerald"></i> Integração HIS via API</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-emerald"></i> Analytics e Dashboards</li>
+<li class="flex items-center gap-3 text-sm text-slate-300"><i class="fa-solid fa-circle-check text-med-emerald"></i> Treinamento on-boarding</li>
+</ul>
+<a class="w-full py-3 rounded-xl border border-med-emerald text-med-emerald font-bold text-center hover:bg-med-emerald hover:text-white transition-all" href="#">Falar com Consultor</a>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Pricing -->
+<!-- BEGIN: Testimonials -->
+<section class="py-24 px-6 bg-med-dark" data-purpose="testimonials" id="depoimentos">
+<div class="max-w-5xl mx-auto">
+<div class="glass-effect p-8 md:p-12 rounded-[3rem] relative overflow-hidden">
+<div class="absolute top-10 right-10 text-9xl text-white/5 font-serif italic">"</div>
+<div class="relative z-10 text-center">
+<div class="flex justify-center mb-8">
+<div class="relative w-24 h-24">
+<img alt="Doctor" class="rounded-full border-4 border-med-cyan shadow-xl" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf9K8wUePLoHS9wVI6u8MQZVJSTFXygim0zxQTI9gyEyoWmNh99rNUsiW7S8JHc7pI0n3EBDpKMRB1a-NMhsurGGrmEIuzYwy-Rqxvjdgn0u8kCMWLJNHKirjVXH5dp_gTbNEK5SN4jPllkQ9VItOnvwbFsZRodO0FQ2t1_lIcqz7RnXxiMim8QcxpMVqqmHv6mZBTivRIZtk0Dv9bapIfI9jgxlE1ZKHJa4WVGVtAwEjSpqoUwElL1rwYZsYJAkJWZfYyRBx9JIs"/>
+<div class="absolute -bottom-2 -right-2 w-8 h-8 bg-med-emerald rounded-full flex items-center justify-center text-white text-xs">
+<i class="fa-solid fa-check"></i>
+</div>
+</div>
+</div>
+<p class="text-xl md:text-2xl text-slate-200 leading-relaxed italic mb-8">
+            "Uso o AssistMed entre uma consulta e outra no PS. Em 30 segundos tenho um raciocínio clínico focado que me ajuda a tomar decisões com muito mais segurança em casos complexos de emergência. Mudou minha rotina de plantão."
+          </p>
+<div class="font-bold text-lg">Dr. Felipe Andrade</div>
+<div class="text-med-cyan text-sm uppercase tracking-widest font-medium">Cardiologista | CRM-SP 183.442</div>
+</div>
+</div>
+</div>
+</section>
+<!-- END: Testimonials -->
+<!-- BEGIN: Final CTA -->
+<section class="py-24 px-6 relative overflow-hidden" data-purpose="final-call-to-action" id="cta">
+<div class="absolute inset-0 bg-gradient-to-t from-med-cyan/10 to-transparent"></div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<h2 class="text-4xl md:text-6xl font-black mb-8 leading-tight">Leve a IA mais avançada da medicina para o seu WhatsApp.</h2>
+<a class="inline-flex items-center gap-4 px-10 py-6 bg-med-emerald rounded-2xl text-white font-black text-xl md:text-2xl shadow-[0_0_50px_rgba(16,185,129,0.5)] hover:scale-105 transition-all" href="https://wa.me/">
+<i class="fa-brands fa-whatsapp text-4xl"></i>
+        COMEÇAR AGORA — 7 Dias Grátis
+      </a>
+<p class="mt-6 text-slate-500 font-medium">Sem cartão de crédito. Cancele quando quiser.</p>
+</div>
+</section>
+<!-- END: Final CTA -->
+<!-- BEGIN: Footer -->
+<footer class="pt-20 pb-10 px-6 border-t border-med-border bg-med-dark" data-purpose="main-footer">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+<div class="col-span-1 md:col-span-2">
+<div class="flex items-center gap-2 mb-6">
+<i class="fa-solid fa-heart-pulse text-med-cyan text-3xl"></i>
+<span class="text-2xl font-black tracking-tighter">Assist<span class="text-med-cyan">Med</span></span>
+</div>
+<p class="text-slate-500 max-w-sm leading-relaxed">
+          A inteligência artificial ética, segura e focada no desenvolvimento da medicina moderna. Transformando dados em decisões clínicas seguras.
+        </p>
+</div>
+<div>
+<h4 class="font-bold text-white mb-6">Produto</h4>
+<ul class="space-y-4 text-slate-500 text-sm">
+<li><a class="hover:text-med-cyan transition-colors" href="#beneficios">Benefícios</a></li>
+<li><a class="hover:text-med-cyan transition-colors" href="#planos">Planos</a></li>
+<li><a class="hover:text-med-cyan transition-colors" href="#depoimentos">Depoimentos</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-bold text-white mb-6">Legal &amp; Suporte</h4>
+<ul class="space-y-4 text-slate-500 text-sm">
+<li><a class="hover:text-med-cyan transition-colors" href="#">Termos de Uso</a></li>
+<li><a class="hover:text-med-cyan transition-colors" href="#">Privacidade &amp; LGPD</a></li>
+<li><a class="hover:text-med-cyan transition-colors" href="#">Fale Conosco</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto pt-8 border-t border-med-border flex flex-col md:flex-row justify-between items-center gap-4 text-[10px] text-slate-600 uppercase tracking-widest font-bold">
+<p>© 2026 AssistMed AI. Todos os direitos reservados.</p>
+<div class="flex gap-6">
+<a class="hover:text-white" href="#">Instagram</a>
+<a class="hover:text-white" href="#">LinkedIn</a>
+<a class="hover:text-white" href="#">Twitter</a>
+</div>
+</div>
+</footer>
+<!-- END: Footer -->
+<script data-purpose="mobile-menu-logic">
+    const mobileBtn = document.getElementById('mobile-menu-btn');
+    // Simplified logic for mobile toggle or scrolling behavior
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+          behavior: 'smooth'
+        });
+      });
+    });
+  </script>
+</body></html>

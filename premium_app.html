@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssistMed - A IA Clínica no seu WhatsApp</title>
+<meta content="Inteligência Artificial Médica Avançada disponível 24h no seu WhatsApp. Decisões mais rápidas e pacientes mais seguros." name="description"/>
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Plus Jakarta Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Icons (FontAwesome) -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- GSAP -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Plus Jakarta Sans', 'sans-serif'],
+              },
+              colors: {
+                'brand-blue': '#5D89E1',
+                'brand-dark': '#1A1C21',
+                'brand-bg': '#F4F7FE',
+                'brand-emerald': '#34D399',
+                'card-shadow': 'rgba(93, 137, 225, 0.08)',
+                'dark-card': '#23262F',
+                'dark-bg': '#141416',
+              },
+              borderRadius: {
+                '3xl': '24px',
+                '4xl': '32px',
+              },
+              boxShadow: {
+                'soft': '0 20px 40px -15px rgba(0, 0, 0, 0.05)',
+                'brand': '0 20px 40px -15px rgba(93, 137, 225, 0.25)',
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        :root {
+          --glass-bg: rgba(255, 255, 255, 0.7);
+        }
+        .dark {
+          --glass-bg: rgba(35, 38, 47, 0.7);
+        }
+        body {
+          background-color: #F4F7FE;
+          color: #1A1C21;
+          transition: background-color 0.3s ease;
+        }
+        .dark body {
+          background-color: #141416;
+          color: #F4F7FE;
+        }
+        .med-card {
+          background: white;
+          border-radius: 32px;
+          box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.03);
+          border: 1px solid rgba(0,0,0,0.02);
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .dark .med-card {
+          background: #23262F;
+          border-color: rgba(255,255,255,0.05);
+        }
+        .med-card:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.06);
+        }
+        .glass-nav {
+          background: var(--glass-bg);
+          backdrop-filter: blur(12px);
+          border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        .text-gradient {
+          background: linear-gradient(135deg, #5D89E1 0%, #34D399 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+        .floating-glow {
+          position: absolute;
+          filter: blur(100px);
+          opacity: 0.4;
+          z-index: -1;
+        }
+        .wa-chat-bubble {
+          border-radius: 16px;
+          padding: 12px 16px;
+          margin-bottom: 8px;
+          max-width: 85%;
+          font-size: 0.875rem;
+          line-height: 1.4;
+        }
+        .wa-msg-in {
+          background: #FFFFFF;
+          color: #1A1C21;
+          align-self: flex-start;
+          border-bottom-left-radius: 4px;
+        }
+        .dark .wa-msg-in { background: #353945; color: #FCFCFD; }
+        .wa-msg-out {
+          background: #5D89E1;
+          color: white;
+          align-self: flex-end;
+          border-bottom-right-radius: 4px;
+        }
+        .msg-typing .dot {
+          display: inline-block;
+          width: 5px;
+          height: 5px;
+          background: #94A3B8;
+          border-radius: 50%;
+          margin: 0 2px;
+          animation: wa-typing 1.4s infinite;
+        }
+        @keyframes wa-typing {
+          0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+          30% { transform: translateY(-4px); opacity: 1; }
+        }
+        .mockup-container {
+          background: white;
+          border-radius: 48px;
+          padding: 12px;
+          box-shadow: 0 50px 100px -20px rgba(0,0,0,0.15);
+        }
+        .dark .mockup-container { background: #23262F; }
+    </style>
+</head>
+<body class="antialiased">
+<!-- Lead Modal -->
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-brand-dark/40 backdrop-blur-sm transition-opacity duration-300" id="leadModal">
+<div class="bg-white dark:bg-brand-dark w-full max-w-md rounded-4xl overflow-hidden shadow-2xl p-10">
+<div class="flex justify-between items-start mb-8">
+<div>
+<h3 class="text-3xl font-extrabold text-brand-dark dark:text-white mb-2" data-en="Welcome to AssistMed" data-pt="Bem-vindo à AssistMed">Bem-vindo à AssistMed</h3>
+<p class="text-slate-500 text-sm" data-en="Join 2,400+ doctors today." data-pt="Junte-se a 2.400+ médicos hoje.">Junte-se a 2.400+ médicos hoje.</p>
+</div>
+<button class="text-slate-400 hover:text-brand-dark dark:hover:text-white transition-colors" onclick="toggleModal()"><i class="fa-solid fa-xmark text-2xl"></i></button>
+</div>
+<form class="space-y-6" id="leadForm">
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">Nome Completo</label>
+<input class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all" name="nome" placeholder="Dr. Felipe Andrade" required="" type="text"/>
+</div>
+<div>
+<label class="block text-xs font-bold uppercase tracking-widest text-slate-400 mb-2">CRM / Estado</label>
+<input class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-5 py-4 text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-blue outline-none transition-all" name="crm" placeholder="123456/SP" required="" type="text"/>
+</div>
+<button class="w-full py-5 bg-brand-blue rounded-2xl text-white font-bold text-lg hover:shadow-brand transition-all mt-4" type="submit">
+<span data-en="Access WhatsApp Now" data-pt="Acessar WhatsApp Agora">Acessar WhatsApp Agora</span>
+</button>
+</form>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="fixed top-0 left-0 right-0 z-50 px-6 py-6">
+<div class="max-w-7xl mx-auto flex items-center justify-between glass-nav rounded-3xl px-6 md:px-8 py-4 shadow-soft">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-brand">
+<i class="fa-solid fa-heart-pulse text-xl"></i>
+</div>
+<span class="text-2xl font-extrabold tracking-tight text-brand-dark dark:text-white">Assist<span class="text-brand-blue">Med</span></span>
+</div>
+<div class="hidden lg:flex items-center gap-10 text-sm font-bold text-slate-500 dark:text-slate-400">
+<a class="hover:text-brand-blue transition-colors" data-en="Benefits" data-pt="Benefícios" href="#beneficios">Benefícios</a>
+<a class="hover:text-brand-blue transition-colors" data-en="Product" data-pt="O Produto" href="#produto">O Produto</a>
+<a class="hover:text-brand-blue transition-colors" data-en="Plans" data-pt="Planos" href="#planos">Planos</a>
+<a class="hover:text-brand-blue transition-colors" data-en="Testimonials" data-pt="Depoimentos" href="#depoimentos">Depoimentos</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300" id="lang-toggle">
+<span class="text-[10px] font-black" id="lang-label">PT</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-300" id="theme-toggle">
+<i class="fa-solid fa-moon dark:hidden"></i>
+<i class="fa-solid fa-sun hidden dark:block"></i>
+</button>
+<button class="hidden sm:block px-6 py-3 rounded-2xl bg-brand-dark dark:bg-white text-white dark:text-brand-dark font-bold text-sm hover:scale-105 transition-all" onclick="toggleModal()">
+                Testar Grátis
+            </button>
+<button class="lg:hidden text-brand-dark dark:text-white" id="mobile-menu-btn">
+<i class="fa-solid fa-bars-staggered text-2xl"></i>
+</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative pt-44 pb-32 px-6 overflow-hidden">
+<div class="floating-glow top-0 left-1/4 w-96 h-96 bg-brand-blue"></div>
+<div class="floating-glow bottom-0 right-1/4 w-96 h-96 bg-brand-emerald"></div>
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-20 items-center">
+<div class="text-center lg:text-left">
+<div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-blue/10 text-brand-blue text-xs font-extrabold uppercase tracking-widest mb-8">
+<span class="w-2 h-2 rounded-full bg-brand-blue animate-pulse"></span>
+<span data-en="Medical AI Reinvented" data-pt="IA Médica Reinventada">IA Médica Reinventada</span>
+</div>
+<h1 class="text-5xl md:text-7xl font-extrabold leading-[1.1] mb-8 text-brand-dark dark:text-white">
+                A IA Clínica no seu <span class="text-brand-blue">WhatsApp.</span>
+</h1>
+<p class="text-xl text-slate-500 dark:text-slate-400 mb-12 max-w-xl mx-auto lg:mx-0 leading-relaxed">
+                Decisões clínicas em segundos, protocolos atualizados e suporte total para médicos — tudo integrado no seu app de mensagens favorito.
+            </p>
+<div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6">
+<button class="w-full sm:w-auto px-10 py-5 bg-brand-blue rounded-3xl text-white font-extrabold text-lg hover:shadow-brand hover:-translate-y-1 transition-all flex items-center justify-center gap-3" onclick="toggleModal()">
+<i class="fa-brands fa-whatsapp text-2xl"></i>
+<span data-en="Start Free Trial" data-pt="Quero Testar Grátis">Quero Testar Grátis</span>
+</button>
+<div class="flex items-center gap-3 text-slate-500 font-semibold text-sm">
+<i class="fa-solid fa-circle-check text-brand-emerald text-lg"></i>
+<span>CFM &amp; LGPD Compliance</span>
+</div>
+</div>
+</div>
+<!-- Phone Mockup -->
+<div class="relative flex justify-center lg:justify-end">
+<div class="mockup-container w-[320px] md:w-[360px] relative z-10">
+<div class="bg-brand-bg dark:bg-brand-dark rounded-[36px] overflow-hidden aspect-[9/19.5] flex flex-col border border-slate-100 dark:border-white/5">
+<!-- WhatsApp Header -->
+<div class="bg-white dark:bg-[#23262F] p-6 pb-4 flex items-center gap-4 border-b border-slate-100 dark:border-white/5">
+<div class="w-12 h-12 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue font-black">AM</div>
+<div class="flex-1">
+<div class="font-bold text-brand-dark dark:text-white">AssistMed IA</div>
+<div class="text-[10px] text-brand-emerald font-bold uppercase tracking-widest">Ativo Agora</div>
+</div>
+<div class="flex gap-4 text-slate-400">
+<i class="fa-solid fa-video"></i>
+<i class="fa-solid fa-phone"></i>
+</div>
+</div>
+<!-- Messages Area -->
+<div class="flex-1 p-6 flex flex-col gap-4 bg-[#F8FAFF] dark:bg-[#1A1C21] overflow-hidden" id="chatContainer">
+<div class="wa-chat-bubble wa-msg-out opacity-0" id="anim-msg-1">Protocolo para sepse? Paciente 65a, DRC.</div>
+<div class="msg msg-typing px-4" id="anim-typing" style="display:none;">
+<span class="dot"></span><span class="dot"></span><span class="dot"></span>
+</div>
+<div class="wa-chat-bubble wa-msg-in scale-0" id="anim-msg-2">
+<div class="text-[11px] font-bold text-brand-blue mb-1 uppercase tracking-tighter">Diretriz 2024</div>
+<p class="text-[13px] leading-relaxed">
+<b>1. Ringer Lactato:</b> cautela no volume (15-20ml/kg) devido à DRC.<br/>
+<b>2. ATB:</b> Ceftriaxona + Vancomicina na 1ª hora.
+                            </p>
+</div>
+<div class="wa-chat-bubble wa-msg-out opacity-0" id="anim-msg-3">Dose de Noradrenalina?</div>
+<div class="wa-chat-bubble wa-msg-in scale-0" id="anim-msg-4">
+<p class="text-[13px]">Início: 0.05 a 0.5 mcg/kg/min. Titular para PAM &gt; 65 mmHg.</p>
+</div>
+</div>
+<!-- Input Bar -->
+<div class="p-6 bg-white dark:bg-[#23262F] flex items-center gap-4">
+<div class="flex-1 bg-slate-100 dark:bg-white/5 rounded-2xl px-5 py-3 text-sm text-slate-400">Mensagem...</div>
+<div class="w-10 h-10 bg-brand-blue rounded-full flex items-center justify-center text-white">
+<i class="fa-solid fa-microphone"></i>
+</div>
+</div>
+</div>
+</div>
+<!-- Floating Accents like in Reference -->
+<div class="absolute -top-10 -left-10 w-24 h-24 bg-brand-emerald/10 rounded-full blur-2xl"></div>
+<div class="absolute top-1/2 -right-10 w-40 h-40 bg-brand-blue/10 rounded-full blur-3xl"></div>
+</div>
+</div>
+</header>
+<!-- Trust Bar -->
+<section class="py-20 border-y border-slate-100 dark:border-white/5 bg-white dark:bg-brand-dark/50">
+<div class="max-w-7xl mx-auto px-6">
+<div class="flex flex-wrap justify-center gap-x-16 gap-y-10 items-center opacity-40 hover:opacity-100 transition-opacity">
+<div class="flex items-center gap-3 font-extrabold text-slate-500 tracking-widest text-xs">
+<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-shield-halved text-brand-blue"></i></div>
+                CONFORME CFM &amp; LGPD
+            </div>
+<div class="flex items-center gap-3 font-extrabold text-slate-500 tracking-widest text-xs">
+<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-user-doctor text-brand-blue"></i></div>
+                2.400+ MÉDICOS ATIVOS
+            </div>
+<div class="flex items-center gap-3 font-extrabold text-slate-500 tracking-widest text-xs">
+<div class="w-8 h-8 rounded-lg bg-slate-100 flex items-center justify-center"><i class="fa-solid fa-server text-brand-blue"></i></div>
+                PADRÃO HL7 / FHIR
+            </div>
+</div>
+</div>
+</section>
+<!-- Features Section -->
+<section class="py-32 px-6" id="beneficios">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-brand-dark dark:text-white">O raciocínio clínico do futuro, <span class="text-brand-blue">hoje.</span></h2>
+<p class="text-slate-500 max-w-2xl mx-auto text-lg leading-relaxed">Desenvolvemos uma interface invisível para a tecnologia mais avançada da medicina.</p>
+</div>
+<div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+<!-- Feature 1 -->
+<div class="med-card p-10 group">
+<div class="w-16 h-16 rounded-3xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-3xl mb-8 group-hover:bg-brand-blue group-hover:text-white transition-all">
+<i class="fa-solid fa-brain"></i>
+</div>
+<h3 class="text-2xl font-extrabold mb-4 text-brand-dark dark:text-white">Raciocínio Instantâneo</h3>
+<p class="text-slate-500 leading-relaxed text-sm">Apoio em diagnósticos diferenciais em segundos, cruzando sintomas com as maiores bases literárias globais.</p>
+</div>
+<!-- Feature 2 -->
+<div class="med-card p-10 group">
+<div class="w-16 h-16 rounded-3xl bg-brand-emerald/10 flex items-center justify-center text-brand-emerald text-3xl mb-8 group-hover:bg-brand-emerald group-hover:text-white transition-all">
+<i class="fa-solid fa-prescription-bottle-medical"></i>
+</div>
+<h3 class="text-2xl font-extrabold mb-4 text-brand-dark dark:text-white">Protocolos Dinâmicos</h3>
+<p class="text-slate-500 leading-relaxed text-sm">Sugestões posológicas e condutas rigorosas baseadas em diretrizes internacionais atualizadas em tempo real.</p>
+</div>
+<!-- Feature 3 -->
+<div class="med-card p-10 group">
+<div class="w-16 h-16 rounded-3xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-3xl mb-8 group-hover:bg-brand-blue group-hover:text-white transition-all">
+<i class="fa-solid fa-file-medical"></i>
+</div>
+<h3 class="text-2xl font-extrabold mb-4 text-brand-dark dark:text-white">Resumo de Casos</h3>
+<p class="text-slate-500 leading-relaxed text-sm">Envie um áudio descrevendo o quadro do paciente e receba uma evolução estruturada, pronta para o prontuário.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Product Showcase (Dashboard View) -->
+<section class="py-32 px-6 bg-slate-50 dark:bg-brand-dark/30" id="produto">
+<div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-24 items-center">
+<div class="order-2 lg:order-1 relative">
+<!-- Dashboard style mockup from Reference 8 -->
+<div class="bg-white dark:bg-[#23262F] rounded-4xl p-8 shadow-soft border border-slate-100 dark:border-white/5">
+<div class="flex items-center justify-between mb-10">
+<div class="flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center">
+<i class="fa-solid fa-user-doctor text-brand-blue"></i>
+</div>
+<div>
+<div class="font-extrabold text-brand-dark dark:text-white">Dashboard Clínico</div>
+<div class="text-[10px] text-slate-400 font-bold uppercase tracking-widest">Sincronizado</div>
+</div>
+</div>
+<div class="flex gap-2">
+<div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"><i class="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i></div>
+<div class="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center"><i class="fa-solid fa-calendar text-slate-400 text-xs"></i></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-brand-blue p-8 rounded-3xl text-white relative overflow-hidden">
+<div class="relative z-10">
+<div class="text-xs font-bold uppercase tracking-widest opacity-80 mb-2">Análise de IA</div>
+<div class="text-2xl font-black mb-4">Escore de Wells p/ TEP</div>
+<div class="bg-white/20 backdrop-blur-md rounded-2xl p-4 text-sm font-medium">
+                                Probabilidade ALTA (&gt;6) <br/> Sugestão: Angio-TC de Tórax
+                            </div>
+</div>
+<i class="fa-solid fa-chart-line absolute -bottom-4 -right-4 text-8xl opacity-10"></i>
+</div>
+<div class="bg-slate-50 dark:bg-white/5 p-6 rounded-3xl border border-slate-100 dark:border-white/5">
+<i class="fa-solid fa-calculator text-brand-blue mb-3"></i>
+<div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Cálculo</div>
+<div class="text-sm font-bold text-brand-dark dark:text-white">Dose Pediátrica</div>
+</div>
+<div class="bg-slate-50 dark:bg-white/5 p-6 rounded-3xl border border-slate-100 dark:border-white/5">
+<i class="fa-solid fa-microscope text-brand-emerald mb-3"></i>
+<div class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Exames</div>
+<div class="text-sm font-bold text-brand-dark dark:text-white">PDF Interpretado</div>
+</div>
+</div>
+</div>
+</div>
+<div class="order-1 lg:order-2">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-8 leading-tight text-brand-dark dark:text-white">
+                Uma pergunta no WhatsApp.<br/>
+<span class="text-brand-blue">Uma resposta clínica precisa.</span>
+</h2>
+<p class="text-lg text-slate-500 dark:text-slate-400 mb-10 leading-relaxed">
+                Esqueça procurar em livros volumosos ou perder tempo em sites de busca genéricos durante um plantão corrido. O AssistMed foi treinado especificamente com literatura médica premium.
+            </p>
+<ul class="space-y-6">
+<li class="flex items-center gap-4 text-brand-dark dark:text-slate-200 font-bold">
+<div class="w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+<i class="fa-solid fa-check text-xs"></i>
+</div>
+<span>Literatura médica premium 2024</span>
+</li>
+<li class="flex items-center gap-4 text-brand-dark dark:text-slate-200 font-bold">
+<div class="w-8 h-8 rounded-full bg-brand-blue/10 flex items-center justify-center text-brand-blue">
+<i class="fa-solid fa-check text-xs"></i>
+</div>
+<span>Reconhecimento de termos técnicos em áudio</span>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Pricing -->
+<section class="py-32 px-6" id="planos">
+<div class="max-w-7xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-4xl md:text-5xl font-extrabold mb-6 text-brand-dark dark:text-white">Planos feitos para profissionais</h2>
+<p class="text-slate-500">Escolha a inteligência certa para a sua fase de carreira.</p>
+</div>
+<div class="grid md:grid-cols-3 gap-10 items-end">
+<!-- Plan 1 -->
+<div class="med-card p-10 flex flex-col">
+<h3 class="text-xl font-extrabold mb-1 text-brand-dark dark:text-white">Residente</h3>
+<p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">Médicos em formação</p>
+<div class="text-4xl font-black mb-10 text-brand-dark dark:text-white">R$ 79<span class="text-sm font-bold text-slate-400 tracking-normal">/mês</span></div>
+<ul class="space-y-5 mb-12 flex-1">
+<li class="flex items-center gap-3 text-sm text-slate-500 font-medium"><i class="fa-solid fa-check text-brand-blue"></i> Dúvidas clínicas ilimitadas</li>
+<li class="flex items-center gap-3 text-sm text-slate-500 font-medium"><i class="fa-solid fa-check text-brand-blue"></i> Protocolos de residência</li>
+</ul>
+<button class="w-full py-4 rounded-2xl border-2 border-brand-blue text-brand-blue font-bold hover:bg-brand-blue hover:text-white transition-all">Assinar Residente</button>
+</div>
+<!-- Plan 2 (Popular / Refactored based on Ref 8 style) -->
+<div class="med-card p-10 flex flex-col scale-105 border-brand-blue relative bg-brand-blue text-white shadow-brand">
+<div class="absolute -top-4 left-1/2 -translate-x-1/2 bg-brand-dark dark:bg-white text-white dark:text-brand-dark text-[10px] font-black uppercase px-6 py-2 rounded-full tracking-widest shadow-lg">Mais Popular</div>
+<h3 class="text-xl font-extrabold mb-1">Clínico Pro</h3>
+<p class="text-white/70 text-xs font-bold uppercase tracking-widest mb-10">Médicos em consultório</p>
+<div class="text-5xl font-black mb-10">R$ 149<span class="text-sm font-bold text-white/60 tracking-normal">/mês</span></div>
+<ul class="space-y-5 mb-12 flex-1">
+<li class="flex items-center gap-3 text-sm font-semibold"><i class="fa-solid fa-circle-check text-brand-dark"></i> Tudo do plano Residente</li>
+<li class="flex items-center gap-3 text-sm font-semibold"><i class="fa-solid fa-circle-check text-brand-dark"></i> Análise de PDF de exames</li>
+<li class="flex items-center gap-3 text-sm font-semibold"><i class="fa-solid fa-circle-check text-brand-dark"></i> Resumo de áudios médicos</li>
+</ul>
+<button class="w-full py-5 rounded-2xl bg-white text-brand-blue font-black text-lg hover:shadow-2xl transition-all" onclick="toggleModal()">Começar Agora</button>
+</div>
+<!-- Plan 3 -->
+<div class="med-card p-10 flex flex-col">
+<h3 class="text-xl font-extrabold mb-1 text-brand-dark dark:text-white">Institucional</h3>
+<p class="text-slate-400 text-xs font-bold uppercase tracking-widest mb-10">Hospitais e redes</p>
+<div class="text-3xl font-black mb-10 text-brand-dark dark:text-white">Sob Consulta</div>
+<ul class="space-y-5 mb-12 flex-1">
+<li class="flex items-center gap-3 text-sm text-slate-500 font-medium"><i class="fa-solid fa-check text-brand-emerald"></i> Escala corporativa</li>
+<li class="flex items-center gap-3 text-sm text-slate-500 font-medium"><i class="fa-solid fa-check text-brand-emerald"></i> Integração HIS via API</li>
+</ul>
+<button class="w-full py-4 rounded-2xl border-2 border-brand-emerald text-brand-emerald font-bold hover:bg-brand-emerald hover:text-white transition-all">Falar com Consultor</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials -->
+<section class="py-32 px-6 bg-slate-50 dark:bg-brand-dark/20" id="depoimentos">
+<div class="max-w-4xl mx-auto">
+<div class="text-center mb-20">
+<h2 class="text-4xl font-extrabold text-brand-dark dark:text-white">Mensagens de médicos reais</h2>
+</div>
+<div class="space-y-10">
+<div class="med-card p-8 flex flex-col md:flex-row gap-8 items-start">
+<img alt="Dr. Felipe" class="w-20 h-20 rounded-3xl object-cover shadow-soft" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAf9K8wUePLoHS9wVI6u8MQZVJSTFXygim0zxQTI9gyEyoWmNh99rNUsiW7S8JHc7pI0n3EBDpKMRB1a-NMhsurGGrmEIuzYwy-Rqxvjdgn0u8kCMWLJNHKirjVXH5dp_gTbNEK5SN4jPllkQ9VItOnvwbFsZRodO0FQ2t1_lIcqz7RnXxiMim8QcxpMVqqmHv6mZBTivRIZtk0Dv9bapIfI9jgxlE1ZKHJa4WVGVtAwEjSpqoUwElL1rwYZsYJAkJWZfYyRBx9JIs"/>
+<div class="flex-1">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h4 class="font-extrabold text-brand-dark dark:text-white">Dr. Felipe Andrade</h4>
+<p class="text-[10px] text-brand-blue font-black uppercase tracking-widest">Cardiologista • CRM 183.442</p>
+</div>
+<div class="text-brand-emerald"><i class="fa-solid fa-certificate"></i></div>
+</div>
+<div class="bg-slate-50 dark:bg-white/5 p-6 rounded-2xl border border-slate-100 dark:border-white/5 relative">
+<p class="text-slate-600 dark:text-slate-400 italic leading-relaxed">"Uso o AssistMed no PS. Em 30 segundos tenho um raciocínio clínico focado que me ajuda a tomar decisões com muito mais segurança em casos complexos."</p>
+<div class="text-[10px] text-slate-400 mt-4 text-right">09:15 <i class="fa-solid fa-check-double text-brand-blue"></i></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA -->
+<section class="py-32 px-6 text-center">
+<div class="max-w-4xl mx-auto">
+<h2 class="text-5xl md:text-6xl font-black mb-12 text-brand-dark dark:text-white leading-tight">Leve a medicina mais avançada para o seu WhatsApp.</h2>
+<button class="px-12 py-7 bg-brand-emerald rounded-3xl text-white font-black text-2xl shadow-2xl hover:scale-105 transition-all flex items-center gap-5 mx-auto" onclick="toggleModal()">
+<i class="fa-brands fa-whatsapp text-4xl"></i>
+<span>COMEÇAR TESTE GRÁTIS</span>
+</button>
+<p class="mt-8 text-slate-500 font-bold uppercase tracking-widest text-xs">Sem cartão de crédito. Cancele quando quiser.</p>
+</div>
+</section>
+<!-- Footer -->
+<footer class="pt-32 pb-12 px-6 border-t border-slate-100 dark:border-white/5 bg-white dark:bg-brand-dark transition-colors">
+<div class="max-w-7xl mx-auto grid md:grid-cols-4 gap-16 mb-20">
+<div class="col-span-2">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white"><i class="fa-solid fa-heart-pulse"></i></div>
+<span class="text-2xl font-black text-brand-dark dark:text-white">Assist<span class="text-brand-blue">Med</span></span>
+</div>
+<p class="text-slate-500 max-w-sm leading-relaxed text-sm font-medium">A inteligência artificial ética e segura focada no desenvolvimento da medicina moderna. Transformando dados em decisões clínicas seguras.</p>
+</div>
+<div>
+<h4 class="font-extrabold text-brand-dark dark:text-white mb-8 text-sm uppercase tracking-widest">Links Rápidos</h4>
+<ul class="space-y-4 text-slate-500 text-sm font-bold">
+<li><a class="hover:text-brand-blue transition-colors" href="#beneficios">Benefícios</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#planos">Planos</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#depoimentos">Depoimentos</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-extrabold text-brand-dark dark:text-white mb-8 text-sm uppercase tracking-widest">Suporte</h4>
+<ul class="space-y-4 text-slate-500 text-sm font-bold">
+<li><a class="hover:text-brand-blue transition-colors" href="#">Termos de Uso</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#">Privacidade &amp; LGPD</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-7xl mx-auto pt-10 border-t border-slate-100 dark:border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[11px] text-slate-400 font-bold uppercase tracking-widest">
+<p>© 2026 AssistMed AI. All rights reserved.</p>
+<div class="flex gap-8">
+<a class="hover:text-brand-blue" href="#">Instagram</a>
+<a class="hover:text-brand-blue" href="#">LinkedIn</a>
+</div>
+</div>
+</footer>
+<script>
+    // GSAP Animation Logic
+    gsap.registerPlugin(ScrollTrigger);
+
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: "#chatContainer",
+        start: "top 80%",
+      }
+    });
+
+    tl.to("#anim-msg-1", { opacity: 1, y: 0, duration: 0.5 })
+      .set("#anim-typing", { display: "block" })
+      .to("#anim-typing", { duration: 1.5, opacity: 1 })
+      .set("#anim-typing", { display: "none" })
+      .to("#anim-msg-2", { scale: 1, duration: 0.8, ease: "back.out(1.7)" })
+      .to("#anim-msg-3", { opacity: 1, duration: 0.5 }, "+=0.5")
+      .to("#anim-msg-4", { scale: 1, duration: 0.8, ease: "back.out(1.7)" });
+
+    // Lead Modal Logic
+    const modal = document.getElementById('leadModal');
+    const leadForm = document.getElementById('leadForm');
+
+    function toggleModal() {
+      if (modal.classList.contains('hidden')) {
+        modal.classList.remove('hidden');
+        gsap.fromTo("#leadModal > div", { y: 40, opacity: 0, scale: 0.9 }, { y: 0, opacity: 1, scale: 1, duration: 0.5, ease: "power4.out" });
+      } else {
+        gsap.to("#leadModal > div", { y: 40, opacity: 0, scale: 0.9, duration: 0.3, onComplete: () => modal.classList.add('hidden') });
+      }
+    }
+
+    leadForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formData = new FormData(leadForm);
+      const data = Object.fromEntries(formData.entries());
+      const text = `Olá, meu nome é ${data.nome} (CRM: ${data.crm}). Gostaria de testar a AssistMed!`;
+      window.location.href = `https://wa.me/55000000000?text=${encodeURIComponent(text)}`;
+    });
+
+    // Theme Toggle
+    document.getElementById('theme-toggle').addEventListener('click', () => {
+      document.documentElement.classList.toggle('dark');
+    });
+
+    // Lang Toggle
+    let currentLang = 'pt';
+    const langLabel = document.getElementById('lang-label');
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+        currentLang = currentLang === 'pt' ? 'en' : 'pt';
+        langLabel.textContent = currentLang.toUpperCase();
+        document.querySelectorAll('[data-en]').forEach(el => {
+            el.textContent = el.getAttribute(`data-${currentLang}`);
+        });
+    });
+</script>
+</body></html>

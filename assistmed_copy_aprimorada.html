@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="pt-BR"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>AssistMed - O Futuro da Medicina no seu WhatsApp</title>
+<meta content="Automatize prontuários, prescrições e diagnósticos diretamente no WhatsApp com segurança e precisão em segundos." name="description"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&amp;family=Inter:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<script>
+        tailwind.config = {
+          darkMode: 'class',
+          theme: {
+            extend: {
+              fontFamily: {
+                sans: ['Inter', 'sans-serif'],
+                heading: ['Outfit', 'sans-serif'],
+              },
+              colors: {
+                'brand-blue': '#5D89E1',
+                'brand-dark': '#0F172A',
+                'brand-bg': '#F8FAFC',
+                'brand-teal': '#58A6A6',
+                'light-gray': '#F1F5F9',
+                'dark-card': '#1E293B',
+              },
+              borderRadius: {
+                '3xl': '24px',
+                '4xl': '32px',
+                '5xl': '48px',
+              }
+            }
+          }
+        }
+    </script>
+<style type="text/tailwindcss">
+        :root {
+          --glass-bg: rgba(255, 255, 255, 0.75);
+          --frosted-gradient: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(241,245,249,0.85) 100%);
+          --gel-gradient: linear-gradient(180deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+        }
+        .dark {
+          --glass-bg: rgba(15, 23, 42, 0.75);
+          --frosted-gradient: linear-gradient(135deg, rgba(30,41,59,0.95) 0%, rgba(15,23,42,0.85) 100%);
+        }
+        body {
+          background-color: #F8FAFC;
+          color: #1E293B;
+          font-family: 'Inter', sans-serif;
+          font-weight: 400;
+          overflow-x: hidden;
+        }
+        .dark body {
+          background-color: #0F172A;
+          color: #F1F5F9;
+        }
+        h1, h2, h3, h4 {
+          font-family: 'Outfit', sans-serif;
+          letter-spacing: -0.02em;
+        }
+        .frosted-card {
+          background: var(--frosted-gradient);
+          backdrop-filter: blur(20px);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 0 10px 40px -10px rgba(31, 38, 135, 0.08);
+          transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.6s ease;
+        }
+        .dark .frosted-card {
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .wa-chat-bubble {
+          padding: 10px 14px;
+          margin-bottom: 8px;
+          max-width: 82%;
+          font-size: 0.825rem;
+          line-height: 1.4;
+          position: relative;
+          box-shadow: 0 1px 0.5px rgba(0,0,0,0.13);
+        }
+        .wa-msg-in {
+          background: #FFFFFF;
+          color: #111B21;
+          align-self: flex-start;
+          border-radius: 0px 8px 8px 8px;
+          border: 1px solid #e2e8f0;
+        }
+        .dark .wa-msg-in { 
+          background: #202C33; 
+          color: #E9EDEF;
+          border-color: #2a3942;
+        }
+        .wa-msg-out {
+          background: #5D89E1;
+          color: white;
+          align-self: flex-end;
+          border-radius: 8px 0px 8px 8px;
+        }
+        .gel-button {
+          position: relative;
+          overflow: hidden;
+          box-shadow: 0 8px 24px -4px rgba(93, 137, 225, 0.5);
+          transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+        }
+        .gel-button::after {
+          content: "";
+          position: absolute;
+          top: 0; left: 0; right: 0; height: 45%;
+          background: var(--gel-gradient);
+          pointer-events: none;
+        }
+        .gel-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 12px 30px -4px rgba(93, 137, 225, 0.6);
+        }
+        .metallic-device {
+          background: linear-gradient(145deg, #f1f5f9 0%, #cbd5e1 50%, #94a3b8 100%);
+          border: 1px solid rgba(255, 255, 255, 0.6);
+          box-shadow: 
+            inset 0 0 1px 1px rgba(255,255,255,0.9),
+            0 25px 50px -12px rgba(0,0,0,0.25);
+        }
+        .dark .metallic-device {
+          background: linear-gradient(145deg, #475569 0%, #1e293b 50%, #020617 100%);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+        .section-spacing {
+          padding-top: 100px;
+          padding-bottom: 100px;
+        }
+        .bg-blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(93, 137, 225, 0.15) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            z-index: -1;
+            filter: blur(50px);
+        }
+        .typing-dot {
+          width: 4px;
+          height: 4px;
+          background: #94a3b8;
+          border-radius: 50%;
+          display: inline-block;
+          margin: 0 1px;
+        }
+        .carousel-track {
+            display: flex;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+        }
+        .carousel-track::-webkit-scrollbar { display: none; }
+        .carousel-item {
+            flex: 0 0 85%;
+            scroll-snap-align: center;
+            margin-right: 20px;
+        }
+        @media (min-width: 768px) {
+            .carousel-item { flex: 0 0 450px; }
+        }
+        .testimonial-quotes {
+          font-family: 'Outfit', sans-serif;
+          font-size: 140px;
+          line-height: 1;
+          pointer-events: none;
+          user-select: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="antialiased">
+<div class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md" id="leadModal">
+<div class="bg-white dark:bg-brand-dark w-full max-w-md rounded-4xl overflow-hidden shadow-2xl p-10 frosted-card">
+<div class="flex justify-between items-start mb-10">
+<div>
+<h3 class="text-3xl font-bold text-brand-dark dark:text-white mb-2">Bem-vindo à AssistMed</h3>
+<p class="text-slate-600 dark:text-slate-400 text-sm font-medium">Junte-se a 20.000+ consultas já realizadas.</p>
+</div>
+<button class="text-slate-400 hover:text-brand-dark transition-colors" onclick="toggleModal()"><i class="fa-solid fa-xmark text-2xl"></i></button>
+</div>
+<form class="space-y-6" id="leadForm">
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600 dark:text-slate-400 mb-3">Nome Completo</label>
+<input class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-2xl px-6 py-4 text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-blue/50 outline-none transition-all" name="nome" placeholder="Dr. Felipe Andrade" required="" type="text"/>
+</div>
+<div>
+<label class="block text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600 dark:text-slate-400 mb-3">CRM / Estado</label>
+<input class="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-slate-800 rounded-2xl px-6 py-4 text-brand-dark dark:text-white focus:ring-2 focus:ring-brand-blue/50 outline-none transition-all" name="crm" placeholder="123456/SP" required="" type="text"/>
+</div>
+<button class="w-full py-5 bg-brand-blue rounded-2xl text-white font-bold text-lg gel-button mt-6" type="submit">
+<span>Acessar WhatsApp Agora</span>
+</button>
+</form>
+</div>
+</div>
+<nav class="fixed top-0 left-0 right-0 z-[60] px-6 py-6">
+<div class="max-w-5xl mx-auto flex items-center justify-between bg-[var(--glass-bg)] backdrop-blur-2xl rounded-full px-8 py-3 shadow-xl shadow-black/5 border border-white/40 dark:border-white/10">
+<div class="flex items-center gap-2">
+<div class="w-9 h-9 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-lg shadow-brand-blue/20">
+<i class="fa-solid fa-heart-pulse text-base"></i>
+</div>
+<span class="text-xl font-bold tracking-tight text-brand-dark dark:text-white">Assist<span class="text-brand-blue font-light">Med</span></span>
+</div>
+<div class="hidden lg:flex items-center gap-10 text-[11px] font-bold uppercase tracking-[0.15em] text-slate-600 dark:text-slate-400">
+<a class="hover:text-brand-blue transition-colors" href="#beneficios">Funcionalidades</a>
+<a class="hover:text-brand-blue transition-colors" href="#produto">Sobre</a>
+<a class="hover:text-brand-blue transition-colors" href="#planos">Planos</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-9 h-9 flex items-center justify-center rounded-full bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-slate-300" id="theme-toggle">
+<i class="fa-solid fa-moon dark:hidden text-sm"></i>
+<i class="fa-solid fa-sun hidden dark:block text-sm"></i>
+</button>
+<button class="px-6 py-2.5 rounded-full bg-brand-dark dark:bg-white text-white dark:text-brand-dark font-bold text-[11px] uppercase tracking-widest hover:bg-brand-blue hover:text-white transition-all shadow-lg" onclick="toggleModal()">
+                    Testar Grátis
+                </button>
+</div>
+</div>
+</nav>
+<header class="relative pt-32 pb-16 px-6 min-h-screen flex items-center">
+<div class="bg-blob top-0 left-0"></div>
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-col lg:flex-row items-center gap-10 lg:gap-4">
+<div class="w-full lg:w-1/2 flex justify-center lg:justify-start relative z-20 order-2 lg:order-1">
+<div class="relative w-[320px] md:w-[380px] floating-mockup transition-transform duration-1000" id="mockup">
+<div class="metallic-device rounded-[50px] p-3 shadow-2xl relative">
+<div class="bg-white dark:bg-brand-dark rounded-[40px] overflow-hidden aspect-[9/18.5] flex flex-col relative shadow-inner">
+<div class="bg-[#f0f2f5] dark:bg-[#202C33] px-4 py-4 flex items-center gap-3 border-b border-slate-200 dark:border-slate-800">
+<div class="w-10 h-10 rounded-full bg-slate-300 dark:bg-slate-700 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-xs">
+<i class="fa-solid fa-user-doctor"></i>
+</div>
+<div class="flex-1 text-left">
+<div class="font-bold text-sm text-brand-dark dark:text-white leading-tight">AssistMed IA</div>
+<div class="text-[10px] text-brand-teal font-medium">online</div>
+</div>
+<div class="flex gap-5 text-slate-500">
+<i class="fa-solid fa-video text-sm"></i>
+<i class="fa-solid fa-phone text-sm"></i>
+<i class="fa-solid fa-ellipsis-vertical text-sm"></i>
+</div>
+</div>
+<div class="flex-1 p-4 flex flex-col gap-2 bg-[#efeae2] dark:bg-[#0b141a] overflow-hidden" id="chatContainer">
+<div class="wa-chat-bubble wa-msg-out text-sm" id="anim-msg-1">Protocolo para sepse? Paciente 65a, DRC.</div>
+<div class="wa-chat-bubble wa-msg-in" id="anim-msg-2">
+<p class="text-[12px]"><b class="text-brand-blue">1. Ringer Lactato:</b> 15-20ml/kg.<br/><b class="text-brand-blue">2. ATB:</b> Ceftriaxona + Vancomicina.</p>
+</div>
+<div class="wa-chat-bubble wa-msg-out text-sm" id="anim-msg-3">Dose de Noradrenalina?</div>
+<div class="wa-chat-bubble wa-msg-in" id="anim-msg-4">
+<p class="text-[12px]">0.05 a 0.5 mcg/kg/min. Titular para PAM &gt; 65.</p>
+</div>
+<div class="mt-2 flex items-center gap-2 px-2" id="typingIndicator">
+<div class="bg-white dark:bg-[#202C33] px-3 py-2 rounded-full flex items-center gap-1 shadow-sm">
+<span class="typing-dot"></span>
+<span class="typing-dot"></span>
+<span class="typing-dot"></span>
+</div>
+</div>
+</div>
+<div class="bg-[#f0f2f5] dark:bg-[#202C33] p-3 flex items-center gap-2">
+<i class="fa-regular fa-face-smile text-slate-500 text-xl"></i>
+<div class="flex-1 bg-white dark:bg-[#2a3942] rounded-lg h-9"></div>
+<div class="w-9 h-9 rounded-full bg-brand-blue flex items-center justify-center text-white">
+<i class="fa-solid fa-microphone text-sm"></i>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="w-full lg:w-3/5 lg:-mt-12 text-center lg:text-left relative z-30 order-1 lg:order-2">
+<div class="inline-flex items-center px-4 py-1.5 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-slate-700 dark:text-slate-300 text-[10px] font-bold uppercase tracking-[0.25em] mb-8 shadow-sm">
+<span>IA Médica de Alta Precisão</span>
+</div>
+<h1 class="text-5xl md:text-7xl lg:text-7xl font-bold leading-[1.0] mb-8 text-brand-dark dark:text-white hero-title">
+                        O futuro da medicina no seu <span class="text-brand-blue font-light">WhatsApp.</span>
+</h1>
+<p class="text-lg md:text-xl text-slate-700 dark:text-slate-300 font-medium mb-12 max-w-xl lg:mx-0 mx-auto leading-relaxed hero-subtitle">
+                        Pare de perder horas com prontuários, prescrições ou diagnósticos confusos. Automatize diretamente no WhatsApp com segurança, precisão e em segundos.
+                    </p>
+<div class="flex flex-col lg:items-start items-center gap-8 hero-cta">
+<button class="px-12 py-5 bg-brand-blue rounded-full text-white font-bold text-lg gel-button" onclick="toggleModal()">
+<span>Testar Grátis Agora</span>
+</button>
+<div class="flex items-center gap-3 text-slate-600 dark:text-slate-400 font-bold text-[11px] uppercase tracking-[0.15em] opacity-90">
+<i class="fa-solid fa-shield-halved text-brand-teal"></i>
+<span>100% Conforme LGPD &amp; Ética Médica</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</header>
+<section class="py-14 border-y border-slate-200 dark:border-slate-800 bg-white/40 dark:bg-brand-dark/20 backdrop-blur-sm">
+<div class="max-w-7xl mx-auto px-6 overflow-hidden">
+<div class="flex whitespace-nowrap gap-20 md:justify-center items-center opacity-70 animate-marquee md:animate-none">
+<div class="flex items-center gap-3 font-bold text-slate-700 dark:text-slate-300 tracking-[0.2em] text-[10px]">TOTALMENTE LGPD</div>
+<div class="flex items-center gap-3 font-bold text-slate-700 dark:text-slate-300 tracking-[0.2em] text-[10px]">20.000+ CONSULTAS APOIADAS</div>
+<div class="flex items-center gap-3 font-bold text-slate-700 dark:text-slate-300 tracking-[0.2em] text-[10px]">98% DE SATISFAÇÃO</div>
+</div>
+</div>
+</section>
+<section class="section-spacing px-6 relative" id="beneficios">
+<div class="bg-blob top-1/4 -right-40 opacity-30"></div>
+<div class="max-w-6xl mx-auto">
+<div class="text-center mb-20 scroll-reveal">
+<h2 class="text-4xl md:text-5xl font-bold mb-8 text-brand-dark dark:text-white">Pare de correr contra o tempo, <span class="text-brand-blue font-light">use a IA a seu favor.</span></h2>
+<p class="text-slate-600 dark:text-slate-400 max-w-xl mx-auto text-lg font-medium leading-relaxed">Ferramentas avançadas integradas no seu aplicativo de mensagens favorito.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-2xl mb-8 group-hover:bg-brand-blue group-hover:text-white transition-all">
+<i class="fa-solid fa-clock"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Disponível 24/7</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Esqueça a burocracia de logins e senhas. Tenha respostas rápidas a qualquer hora, diretamente no seu WhatsApp.</p>
+</div>
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-teal/10 flex items-center justify-center text-brand-teal text-2xl mb-8 group-hover:bg-brand-teal group-hover:text-white transition-all">
+<i class="fa-solid fa-stethoscope"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Diagnóstico Rápido e Confiável</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Respostas precisas para diagnósticos diferenciais, considerando sintomas, histórico e exames em segundos.</p>
+</div>
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-2xl mb-8 group-hover:bg-brand-blue group-hover:text-white transition-all">
+<i class="fa-solid fa-pills"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Interação Medicamentosa</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Informações sobre doses, efeitos adversos e alertas automáticos de interações medicamentosas críticas.</p>
+</div>
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-teal/10 flex items-center justify-center text-brand-teal text-2xl mb-8 group-hover:bg-brand-teal group-hover:text-white transition-all">
+<i class="fa-solid fa-file-medical"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Prontuário e Histórico</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Gere resumos médicos e evoluções estruturadas baseadas nos dados do paciente, otimizando seu tempo clínico.</p>
+</div>
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-blue/10 flex items-center justify-center text-brand-blue text-2xl mb-8 group-hover:bg-brand-blue group-hover:text-white transition-all">
+<i class="fa-solid fa-lock"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Segurança de Dados (LGPD)</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Totalmente protegido por criptografia e em conformidade com a LGPD. Seus dados e os do paciente estão seguros.</p>
+</div>
+<div class="frosted-card p-10 rounded-4xl group scroll-reveal-item">
+<div class="w-14 h-14 rounded-2xl bg-brand-teal/10 flex items-center justify-center text-brand-teal text-2xl mb-8 group-hover:bg-brand-teal group-hover:text-white transition-all">
+<i class="fa-solid fa-chart-line"></i>
+</div>
+<h3 class="text-2xl font-bold mb-4 text-brand-dark dark:text-white">Redução de Custos</h3>
+<p class="text-slate-600 dark:text-slate-400 leading-relaxed font-medium text-sm">Automatize tarefas manuais e burocráticas, permitindo mais tempo focado no que realmente importa: o cuidado ao paciente.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="section-spacing px-6 bg-slate-50/50 dark:bg-brand-dark/40" id="produto">
+<div class="max-w-6xl mx-auto">
+<div class="text-center mb-16 scroll-reveal">
+<h2 class="text-4xl md:text-5xl font-bold mb-6 text-brand-dark dark:text-white">Para quem é a <span class="text-brand-blue font-light">AssistMed?</span></h2>
+<p class="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-lg font-medium">Desenvolvemos soluções específicas para cada etapa da jornada médica.</p>
+</div>
+<div class="flex flex-col md:flex-row gap-8 items-stretch justify-center">
+<div class="w-full md:w-1/2 flex flex-col p-10 md:p-14 rounded-5xl bg-gradient-to-b from-blue-50 to-white dark:from-brand-blue/10 dark:to-brand-dark shadow-[0_30px_70px_-15px_rgba(93,137,225,0.2)] transition-all">
+<div class="mb-10">
+<span class="material-symbols-outlined text-[80px] leading-none text-brand-blue">medical_services</span>
+</div>
+<h3 class="text-3xl font-bold text-brand-dark dark:text-white mb-8">Profissionais de Saúde</h3>
+<div class="space-y-6 mb-8 flex-grow">
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Autonomia e agilidade clínica completa em segundos.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Mais tempo livre para focar no paciente e na sua família.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-blue flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Segurança total com dados criptografados e LGPD.</p>
+</div>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col p-10 md:p-14 rounded-5xl bg-gradient-to-b from-teal-50 to-white dark:from-brand-teal/10 dark:to-brand-dark shadow-[0_30px_70px_-15px_rgba(88,166,166,0.2)] transition-all">
+<div class="mb-10">
+<span class="material-symbols-outlined text-[80px] leading-none text-brand-teal">school</span>
+</div>
+<h3 class="text-3xl font-bold text-brand-dark dark:text-white mb-8">Estudantes de Medicina</h3>
+<div class="space-y-6 mb-8 flex-grow">
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Suporte avançado para estudo de casos clínicos complexos.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Preparação intensiva para residência e provas práticas.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex-shrink-0 w-6 h-6 rounded-full bg-brand-teal flex items-center justify-center">
+<i class="fa-solid fa-check text-white text-[10px]"></i>
+</div>
+<p class="text-slate-700 dark:text-slate-300 font-semibold text-base">Acesso imediato às diretrizes do SUS e protocolos internacionais.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section-spacing px-6" id="planos">
+<div class="max-w-6xl mx-auto">
+<div class="text-center mb-20 scroll-reveal">
+<h2 class="text-4xl font-bold mb-6 text-brand-dark dark:text-white">Planos feitos para profissionais</h2>
+<p class="text-slate-600 dark:text-slate-400 font-medium">Escolha a inteligência certa para a sua fase de carreira.</p>
+</div>
+<div class="flex flex-col md:flex-row items-stretch justify-center gap-8">
+<div class="frosted-card p-10 rounded-4xl w-full max-w-sm flex flex-col scroll-reveal-item">
+<h3 class="text-xl font-bold text-brand-dark dark:text-white mb-1">Residente</h3>
+<p class="text-slate-600 dark:text-slate-400 text-[9px] font-bold uppercase tracking-widest mb-8">Médicos em formação</p>
+<div class="text-4xl font-bold text-brand-dark dark:text-white mb-10">R$ 79<span class="text-sm font-light text-slate-500">/mês</span></div>
+<div class="mt-auto">
+<button class="w-full py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase tracking-widest hover:border-brand-blue hover:text-brand-blue transition-all">Assinar Residente</button>
+</div>
+</div>
+<div class="frosted-card p-10 rounded-4xl w-full max-w-sm border-brand-blue/50 relative z-20 flex flex-col md:-translate-y-6 shadow-2xl scroll-reveal-item bg-white/95">
+<div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-blue text-white text-[9px] font-bold uppercase px-6 py-1.5 rounded-full tracking-widest shadow-lg shadow-brand-blue/30">Mais Popular</div>
+<h3 class="text-xl font-bold text-brand-dark dark:text-white mb-1">Clínico Pro</h3>
+<p class="text-slate-600 dark:text-slate-400 text-[9px] font-bold uppercase tracking-widest mb-8">Médicos em consultório</p>
+<div class="text-5xl font-bold text-brand-blue mb-10">R$ 149<span class="text-sm font-light text-slate-500">/mês</span></div>
+<div class="mt-auto">
+<button class="w-full py-5 rounded-2xl bg-brand-blue text-white font-bold text-[10px] uppercase tracking-widest gel-button" onclick="toggleModal()">Começar Agora</button>
+</div>
+</div>
+<div class="frosted-card p-10 rounded-4xl w-full max-w-sm flex flex-col scroll-reveal-item">
+<h3 class="text-xl font-bold text-brand-dark dark:text-white mb-1">Institucional</h3>
+<p class="text-slate-600 dark:text-slate-400 text-[9px] font-bold uppercase tracking-widest mb-8">Hospitais e redes</p>
+<div class="text-3xl font-bold text-brand-dark dark:text-white mb-10">Sob Consulta</div>
+<div class="mt-auto">
+<button class="w-full py-4 rounded-2xl border-2 border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 font-bold text-[10px] uppercase tracking-widest hover:border-brand-teal hover:text-brand-teal transition-all">Falar com Consultor</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section-spacing px-6 bg-slate-50/50 dark:bg-brand-dark/20 overflow-hidden" id="depoimentos">
+<div class="max-w-6xl mx-auto">
+<div class="text-center mb-16 scroll-reveal">
+<h2 class="text-4xl font-bold text-brand-dark dark:text-white mb-4">Vozes da linha de frente</h2>
+<p class="text-slate-600 dark:text-slate-400 font-medium">Relatos reais de quem transformou a conduta médica com nossa IA.</p>
+</div>
+<div class="carousel-track pb-12">
+<div class="carousel-item">
+<div class="frosted-card p-10 rounded-4xl h-full flex flex-col justify-between border-none shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all bg-white/95 dark:bg-brand-dark/95">
+<div class="relative">
+<div class="flex flex-col items-center mb-12 text-center relative z-10">
+<div class="w-28 h-28 mb-8 relative flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-tr from-brand-blue/10 to-transparent rounded-full scale-125 blur-sm"></div>
+<div class="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl relative z-10">
+<img alt="Dr. Roberto" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCoJqhKWa3_HB-uNgu60doShN-b-LmYR7fvtLY41gG6XXXLmr0sGs765Su3fXWQW06unXgT83AJZ2fp2DJSnR6QiqCFp_aq1ta51Uf8ppWzO0xDfR86vK_ZJiOmD2RQkAU1qGVoFAhrWRZKRT3QmC3eONYHJRze-Hht296FKao_LTop5rJk0IZ6cOk08-GiHwdCZQm_ispZDW3n7MHmg5CaeYk9VsiyiDowOlL6Hl1UTI1zJWC_YOwg6DBrXKi9cRDGXWgyWehwwII"/>
+</div>
+</div>
+<h4 class="text-2xl font-bold text-brand-dark dark:text-white mb-1">Dr. Roberto Paiva</h4>
+<p class="text-[11px] uppercase tracking-[0.25em] font-bold text-brand-blue/70 dark:text-brand-blue/50">Psiquiatra</p>
+</div>
+<div class="relative">
+<span class="absolute -top-10 left-0 testimonial-quotes text-brand-blue/5 dark:text-brand-blue/10">“</span>
+<p class="text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed italic text-center px-4 relative z-10">
+                                "A AssistMed transformou minha prática clínica. Com respostas rápidas sobre diagnósticos e tratamentos, ganhei muito tempo com os pacientes."
+                            </p>
+<span class="absolute -bottom-16 right-0 testimonial-quotes text-brand-blue/5 dark:text-brand-blue/10">”</span>
+</div>
+</div>
+</div>
+</div>
+<div class="carousel-item">
+<div class="frosted-card p-10 rounded-4xl h-full flex flex-col justify-between border-none shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all bg-white/95 dark:bg-brand-dark/95">
+<div class="relative">
+<div class="flex flex-col items-center mb-12 text-center relative z-10">
+<div class="w-28 h-28 mb-8 relative flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-tr from-brand-teal/10 to-transparent rounded-full scale-125 blur-sm"></div>
+<div class="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl relative z-10">
+<img alt="Dra. Cristine" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIULFBrzxqkkIeGirZ7LPtXf8KEgGP65n0aMxZLew4C0C_CwuG9WOTQfTavxv9q941JbPvbB7k4mgBPH_XP3mq-53qhgCNQcThgDyfTrjOFG6qISFKvS7KlF5sQum3P6eXMLZG3o2hAOJN_bZmUGLeKk83UeeRyAImXybEErmJEB67T36b5_2lHtSX63pdzIR0Y8csR9F9LSWT6yq4QS-P8W794hE2Mi2RUmC0ir-3wxNrYpK8BrGqMwQchfxdCMLy5bfScC1n_Wk"/>
+</div>
+</div>
+<h4 class="text-2xl font-bold text-brand-dark dark:text-white mb-1">Dra. Cristine Mendes</h4>
+<p class="text-[11px] uppercase tracking-[0.25em] font-bold text-brand-teal/70 dark:text-brand-teal/50">Clínica Geral</p>
+</div>
+<div class="relative">
+<span class="absolute -top-10 left-0 testimonial-quotes text-brand-teal/5 dark:text-brand-teal/10">“</span>
+<p class="text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed italic text-center px-4 relative z-10">
+                                "Me ajudou a economizar tempo em cada consulta, permitindo que eu foque mais no cuidado ao paciente e menos na papelada. É indispensável."
+                            </p>
+<span class="absolute -bottom-16 right-0 testimonial-quotes text-brand-teal/5 dark:text-brand-teal/10">”</span>
+</div>
+</div>
+</div>
+</div>
+<div class="carousel-item">
+<div class="frosted-card p-10 rounded-4xl h-full flex flex-col justify-between border-none shadow-[0_30px_60px_-15px_rgba(0,0,0,0.1)] hover:shadow-[0_40px_80px_-20px_rgba(0,0,0,0.15)] transition-all bg-white/95 dark:bg-brand-dark/95">
+<div class="relative">
+<div class="flex flex-col items-center mb-12 text-center relative z-10">
+<div class="w-28 h-28 mb-8 relative flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-tr from-brand-blue/10 to-transparent rounded-full scale-125 blur-sm"></div>
+<div class="w-full h-full rounded-full overflow-hidden border-4 border-white dark:border-slate-800 shadow-xl relative z-10">
+<img alt="Dr. Lucas" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3fq95hhzH0r4qC3nQPT-y7cTRVfTuBVy1RCa_PuG3x8z7zTmnyusg91eBlW18K0_6Sn49ZKmRdOWkCeDLk8zE5qlRJvwVft1SLNRCoyX3UDC_BXsBrcDlC_olzv2SonQbL4ZcRzixzZ4wHMzIoHD7tv8msNKUfE8PFL63cCvqmvU26PF9126EMSkzHnON6wRY9hSRV1nZWcjheu-RoIdJaeK9U-X-xCiG2Y8Bi9eRs-P5PbWjvRbwQatzyrXS7UuJRj2v0wHAb_g"/>
+</div>
+</div>
+<h4 class="text-2xl font-bold text-brand-dark dark:text-white mb-1">Dr. Lucas Ferreira</h4>
+<p class="text-[11px] uppercase tracking-[0.25em] font-bold text-brand-blue/70 dark:text-brand-blue/50">Cardiologista</p>
+</div>
+<div class="relative">
+<span class="absolute -top-10 left-0 testimonial-quotes text-brand-blue/5 dark:text-brand-blue/10">“</span>
+<p class="text-lg text-slate-600 dark:text-slate-400 font-medium leading-relaxed italic text-center px-4 relative z-10">
+                                "A precisão nas interações medicamentosas é o que mais me impressionou. É como ter um consultor sênior disponível 24 horas por dia."
+                            </p>
+<span class="absolute -bottom-16 right-0 testimonial-quotes text-brand-blue/5 dark:text-brand-blue/10">”</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-center gap-2">
+<div class="w-2 h-2 rounded-full bg-brand-blue"></div>
+<div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+<div class="w-2 h-2 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+</div>
+</div>
+</section>
+<section class="section-spacing px-6 text-center relative overflow-hidden">
+<div class="bg-blob top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 scale-150 opacity-20"></div>
+<div class="max-w-3xl mx-auto relative z-10 scroll-reveal">
+<h2 class="text-5xl md:text-6xl font-bold mb-14 text-brand-dark dark:text-white leading-[1.1]">Comece agora mesmo a transformar sua rotina.</h2>
+<button class="px-14 py-7 bg-brand-dark dark:bg-white text-white dark:text-brand-dark rounded-full font-bold text-xl hover:bg-brand-blue hover:text-white transition-all shadow-2xl transform hover:scale-105 mb-12 gel-button" onclick="toggleModal()">
+                TESTAR GRÁTIS NO WHATSAPP
+            </button>
+<p class="text-slate-600 dark:text-slate-400 font-bold uppercase tracking-widest text-[10px]">Sem cartão de crédito. Sem compromisso.</p>
+</div>
+</section>
+<footer class="pt-32 pb-16 px-6 border-t border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-brand-dark/50">
+<div class="max-w-6xl mx-auto">
+<div class="grid grid-cols-1 lg:grid-cols-4 gap-16 mb-24">
+<div class="lg:col-span-2 space-y-8">
+<div class="flex items-center gap-2">
+<div class="w-10 h-10 bg-brand-blue rounded-xl flex items-center justify-center text-white shadow-md"><i class="fa-solid fa-heart-pulse"></i></div>
+<span class="text-2xl font-bold text-brand-dark dark:text-white">Assist<span class="text-brand-blue font-light">Med</span></span>
+</div>
+<p class="text-slate-600 dark:text-slate-400 max-w-sm leading-relaxed text-sm font-medium">O futuro da medicina no seu WhatsApp. Automatize prontuários, prescrições e diagnósticos com segurança e precisão.</p>
+</div>
+<div class="space-y-6">
+<h4 class="font-bold text-brand-dark dark:text-white text-[11px] uppercase tracking-widest">Navegação</h4>
+<ul class="space-y-4 text-slate-600 dark:text-slate-400 text-sm font-medium">
+<li><a class="hover:text-brand-blue transition-colors" href="#beneficios">Funcionalidades</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#produto">Sobre</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#depoimentos">Depoimentos</a></li>
+</ul>
+</div>
+<div class="space-y-6">
+<h4 class="font-bold text-brand-dark dark:text-white text-[11px] uppercase tracking-widest">Legal</h4>
+<ul class="space-y-4 text-slate-600 dark:text-slate-400 text-sm font-medium">
+<li><a class="hover:text-brand-blue transition-colors" href="#">Termos de Uso</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#">Privacidade</a></li>
+<li><a class="hover:text-brand-blue transition-colors" href="#">Compliance LGPD</a></li>
+</ul>
+</div>
+</div>
+<div class="pt-12 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-slate-600 dark:text-slate-400 font-bold uppercase tracking-[0.2em]">
+<p>© 2026 AssistMed AI. Todos os direitos reservados.</p>
+<div class="flex gap-10">
+<a class="hover:text-brand-blue transition-colors" href="#">Instagram</a>
+<a class="hover:text-brand-blue transition-colors" href="#">LinkedIn</a>
+</div>
+</div>
+</div>
+</footer>
+<script>
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.from(".hero-title", { y: 40, opacity: 0, duration: 1, delay: 0.2, ease: "power3.out" });
+        gsap.from(".hero-subtitle", { y: 30, opacity: 0, duration: 1, delay: 0.4, ease: "power3.out" });
+        gsap.from(".hero-cta", { y: 20, opacity: 0, duration: 1, delay: 0.6, ease: "power3.out" });
+        gsap.from("#mockup", { x: -40, opacity: 0, duration: 1.2, delay: 0.3, ease: "power3.out" });
+        const chatTl = gsap.timeline({
+          scrollTrigger: {
+            trigger: "#chatContainer",
+            start: "top 80%",
+          }
+        });
+        chatTl.from("#anim-msg-1", { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" })
+              .from("#anim-msg-2", { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, "+=0.3")
+              .from("#anim-msg-3", { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, "+=0.5")
+              .from("#anim-msg-4", { y: 20, opacity: 0, duration: 0.5, ease: "power2.out" }, "+=0.3")
+              .from("#typingIndicator", { opacity: 0, duration: 0.3 });
+        document.querySelectorAll('.scroll-reveal').forEach(el => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: "top 90%" },
+                y: 30, opacity: 0, duration: 0.8, ease: "power2.out"
+            });
+        });
+        document.querySelectorAll('.scroll-reveal-item').forEach((el, i) => {
+            gsap.from(el, {
+                scrollTrigger: { trigger: el, start: "top 90%" },
+                y: 40, opacity: 0, duration: 0.8, delay: i * 0.1, ease: "power2.out"
+            });
+        });
+        gsap.to(".floating-mockup", {
+            y: -15, duration: 3.5, repeat: -1, yoyo: true, ease: "sine.inOut"
+        });
+        const modal = document.getElementById('leadModal');
+        function toggleModal() {
+          if (modal.classList.contains('hidden')) {
+            modal.classList.remove('hidden');
+            gsap.fromTo("#leadModal > div", { scale: 0.95, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.4, ease: "back.out(1.5)" });
+          } else {
+            gsap.to("#leadModal > div", { scale: 0.95, opacity: 0, duration: 0.3, onComplete: () => modal.classList.add('hidden') });
+          }
+        }
+        document.getElementById('theme-toggle').addEventListener('click', () => {
+          document.documentElement.classList.toggle('dark');
+        });
+        document.getElementById('leadForm').addEventListener('submit', (e) => {
+          e.preventDefault();
+          const formData = new FormData(e.target);
+          const data = Object.fromEntries(formData.entries());
+          const text = `Olá, meu nome é ${data.nome} (CRM: ${data.crm}). Gostaria de testar a AssistMed!`;
+          window.location.href = `https://wa.me/55000000000?text=${encodeURIComponent(text)}`;
+        });
+    </script>
+</body></html>
